@@ -3,10 +3,9 @@ Feature: Create Blog
   In order to gift my thoughts to the world
   I want to create a blog
 
-  Scenario: Create blog page shown
-    Given I am on the home page
-    Then I should see "Welcome"
-    And I should see "My Shiny Weblog!"
+  Background:
+    Given the blog is set up
+    And I am logged into the admin panel
 
   Scenario: Create blog page not shown when blog created
     Given the blog is set up
