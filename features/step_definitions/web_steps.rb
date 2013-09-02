@@ -41,6 +41,22 @@ Given /^the blog is set up$/ do
                 :profile_id => 1,
                 :name => 'admin',
                 :state => 'active'})
+  User.create!({:login => 'contributor',
+                :password => 'bbbbbbb',
+                :email => 'biber@snow.com',
+                :profile_id => 2,
+                :name => 'contributor',
+                :state => 'active'})
+end
+
+Given /^their exists an article "(.*?)"$/ do |arg1|
+  hash = {:name=>"a title", :title=>arg1, :author=>" author", :body=>" some text", :user_id=>1, :allow_comments=>true, :published=>true}
+  Article.create!(hash)
+end
+
+Then /^I should see the text of "(.*?)"$/ do |title|
+  text = Article.find_by_title(title).body
+  page.should have_content(text)
 end
 
 And /^I am logged into the admin panel$/ do
@@ -55,6 +71,19 @@ And /^I am logged into the admin panel$/ do
   end
 end
 
+And /^I am logged into the admin panel as contributor$/ do
+  visit '/accounts/login'
+  fill_in 'user_login', :with => 'contributor'
+  fill_in 'user_password', :with => 'bbbbbbb'
+  click_button 'Login'
+  if page.respond_to? :should
+    page.should have_content('Login successful')
+  else
+    assert page.has_content?('Login successful')
+  end
+end
+
+
 # Single-line step scoper
 When /^(.*) within (.*[^:])$/ do |step, parent|
   with_scope(parent) { When step }
@@ -67,6 +96,11 @@ end
 
 Given /^(?:|I )am on (.+)$/ do |page_name|
   visit path_to(page_name)
+end
+
+
+When /^I open the "(.*)" edit page$/ do |page_name|
+  visit '/admin/content/edit/' + Article.find_by_title(page_name).id.to_s
 end
 
 When /^(?:|I )go to (.+)$/ do |page_name|
@@ -275,4 +309,50 @@ end
 
 Then /^show me the page$/ do
   save_and_open_page
+end
+
+When /^I merge with "(.*)"$/ do |title|
+  id = Article.find_by_title(title).id
+  fill_in 'merge_with', :with => id
+  click_button 'Merge'
+end
+
+
+
+Given /^their exists an "(.*?)"$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+Given /^I am admin$/ do
+  #pending # express the regexp above with the code you wish you had
+  step "I am logged into the admin panel"
+  visit "admin/users"
+  page.should have_content("admin")
+end
+
+Given /^I am not admin$/ do
+  step "I am logged into the admin panel as contributor"
+  debugger
+  visit "admin/users"
+  page.should have_content("contributor")
+end
+
+Given /^I fill in "(.*?)" with "(.*?)"'s Article ID$/ do |arg1, arg2|
+  pending # express the regexp above with the code you wish you had
+end
+
+Given /^I have merged "(.*?)" and "(.*?)"$/ do |arg1, arg2|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see the author of "(.*?)" or "(.*?)"$/ do |arg1, arg2|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see comments from "(.*?)"$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see the title from "(.*?)" or "(.*?)"$/ do |arg1, arg2|
+  pending # express the regexp above with the code you wish you had
 end
