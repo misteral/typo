@@ -50,7 +50,7 @@ Given /^the blog is set up$/ do
 end
 
 Given /^their exists an article "(.*?)"$/ do |arg1|
-  hash = {:name=>"a title", :title=>arg1, :author=>" author", :body=>" some text", :user_id=>1, :allow_comments=>true, :published=>true}
+  hash = {:name=>"a title", :title=>arg1, :author=>" author", :body=>"#{arg1} some text", :user_id=>1, :allow_comments=>true, :published=>true}
   Article.create!(hash)
 end
 
@@ -332,27 +332,21 @@ end
 
 Given /^I am not admin$/ do
   step "I am logged into the admin panel as contributor"
-  debugger
-  visit "admin/users"
+  #debugger
+  #visit "admin/users"
   page.should have_content("contributor")
 end
 
-Given /^I fill in "(.*?)" with "(.*?)"'s Article ID$/ do |arg1, arg2|
+
+And /^I should see the author of "(.*?)" or "(.*?)"$/ do |arg1, arg2|
   pending # express the regexp above with the code you wish you had
 end
 
-Given /^I have merged "(.*?)" and "(.*?)"$/ do |arg1, arg2|
+And /^I should see comments from "(.*?)"$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
-Then /^I should see the author of "(.*?)" or "(.*?)"$/ do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
-end
-
-Then /^I should see comments from "(.*?)"$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
-end
-
-Then /^I should see the title from "(.*?)" or "(.*?)"$/ do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
+And /^I should see the title from "(.*?)" or "(.*?)"$/ do |arg1, arg2|
+  page.should have_css("#article_title", :value => arg1) or 
+  page.should have_css("#article_title", :value => arg2)
 end

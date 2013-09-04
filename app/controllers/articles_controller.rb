@@ -241,6 +241,27 @@ class ArticlesController < ContentController
     return from..to
   end
 
+  def merge 
+    @comment      = Comment.new
+    @page_title   = this_blog.article_title_template.to_title(@article, this_blog, params)
+    @description = this_blog.article_desc_template.to_title(@article, this_blog, params)
+  @merge_from = params["merge_with"]
+    article_meta
+
+    auto_discovery_feed
+    respond_to do |format|
+      format.html { render "articles/#{@article.post_type}" }
+      format.atom { render_feedback_feed('atom') }
+      format.rss  { render_feedback_feed('rss') }
+      format.xml  { render_feedback_feed('atom') }
+    end
+  rescue ActiveRecord::RecordNotFound
+    error("Post not found...")
+  end
+
+  
+
+
   def split_from_path path
     parts = path.split '/'
     parts.delete('')

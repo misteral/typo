@@ -95,6 +95,31 @@ class Article < Content
   include Article::States
 
   class << self
+
+    def merge_with(art_1_id, art_2_id)
+      art_merged = art_1 = Article.find_by_id(art_1_id)
+      art_2 = Article.find_by_id(art_2_id)
+      new_body = art_1.body + art_2.body
+
+      #art_merged = Article.create(:title=> art_1.title, :author=> art_1.author,
+      #  :body=>new_body, :user=>user,
+      #  :published => true, :allow_comments=> true)
+      art_merged.body = new_body
+      art_2.comments.each do |c|
+        c.article_id = art_merged.id
+        art_merged.comments << c
+      end
+      #art_1.comments.each do |c|
+      #  c.article_id = art_merged.id
+      #  art_merged.comments << c
+      #end
+      art_merged.save
+
+     # Article.destroy(art_1_id)
+      #Article.destroy(art_2_id)
+      art_merged
+    end
+
     def last_draft(article_id)
       article = Article.find(article_id)
       while article.has_child?
@@ -102,6 +127,10 @@ class Article < Content
       end
       article
     end
+
+
+
+
 
     def search_with_pagination(search_hash, paginate_hash)
       
