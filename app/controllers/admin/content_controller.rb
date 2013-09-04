@@ -40,13 +40,10 @@ class Admin::ContentController < Admin::BaseController
   def merge 
     @article = Article.find(params[:id])
     @merge_from = Article.find(params["merge_with"])
-#puts @article.inspect
     @article = Article.merge_with(params[:id], params["merge_with"])
 
     redirect_to :action => 'edit', :id=>@article.id
     flash[:notice] = _("This article was merged successfully")
-    #debugger
-    #new_or_edit
   end
   
   def destroy

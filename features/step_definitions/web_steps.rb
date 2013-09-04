@@ -350,3 +350,7 @@ And /^I should see the title from "(.*?)" or "(.*?)"$/ do |arg1, arg2|
   page.should have_css("#article_title", :value => arg1) or 
   page.should have_css("#article_title", :value => arg2)
 end
+
+Then /^I should see "(.*?)" button$/ do |arg1|
+  page.should have_css(".btn", arg1)
+end
